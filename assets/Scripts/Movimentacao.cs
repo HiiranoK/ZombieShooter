@@ -20,4 +20,8 @@ public class Movimentacao : MonoBehaviour
         Quaternion novaRotacao = Quaternion.LookRotation(direcao);
         meuRigidbody.MoveRotation(novaRotacao);
     }
+    public void Correr(float velocidadeCorrendo)
+    {
+        velocidadeCorrendo *= 3;
+    }
 }

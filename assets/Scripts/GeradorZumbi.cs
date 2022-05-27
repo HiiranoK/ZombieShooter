@@ -14,7 +14,6 @@ public class GeradorZumbi : MonoBehaviour
     public float distanciaGeracao = 5;
     private float distanciaDoJogadorParaGeracao = 20;
     private GameObject player;
-    private int limiteZumbis = 5;
     private void Start()
     {
         player = GameObject.FindWithTag(Tags.player);

@@ -2534,6 +2534,7 @@ GameObject:
   - component: {fileID: 2773611467725317807}
   - component: {fileID: 2110680119662303100}
   - component: {fileID: 8395787776115526525}
+  - component: {fileID: 499202432280193842}
   m_Layer: 0
   m_Name: Personagens
   m_TagString: Player
@@ -2642,7 +2643,6 @@ MonoBehaviour:
   MascaraChao:
     serializedVersion: 2
     m_Bits: 64
-  gameOver: {fileID: 0}
   ScriptHUD: {fileID: 0}
   SomDeDano: {fileID: 8300000, guid: ddb2455a69532b34b94932b2c9e0a4f3, type: 3}
   PontosTotais: 0
@@ -2702,6 +2702,18 @@ MonoBehaviour:
   VidaInicial: 100
   vida: 0
   velocidade: 10
+--- !u!114 &499202432280193842
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1884102019447498}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 871bfd77924017841aed41c22e6c3362, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1938851689004064
 GameObject:
   m_ObjectHideFlags: 0

@@ -17,6 +17,8 @@ public class ZumbiControl : MonoBehaviour, IMatavel
     private Vector3 direcao;
     private float contadorVagal;
     private float tempoEntreVagais = 5;
+    public float porcentagemGerarKitMedico = 0.15f;
+    public GameObject KitMedicoPrefab;
 
     // Start is called before the first frame update
     void Start()
@@ -89,6 +91,7 @@ public class ZumbiControl : MonoBehaviour, IMatavel
         Destroy(gameObject);
         ControlaAudio.instancia.PlayOneShot(SomDeMorte);
         Player.GetComponent<PlayerInput>().SomarPontos(Pontuacao);
+        VerificarGeracaoKitMedico(porcentagemGerarKitMedico);
     }
     public void Vagar()
     {
@@ -112,5 +115,12 @@ public class ZumbiControl : MonoBehaviour, IMatavel
         posicao.y = 0;
         posicao += transform.position;
         return posicao;
+    }
+    void VerificarGeracaoKitMedico(float porcentagemGeracao)
+    {
+        if (Random.value <= porcentagemGeracao)
+        {
+            Instantiate(KitMedicoPrefab, transform.position,Quaternion.identity);
+        }
     }
 }

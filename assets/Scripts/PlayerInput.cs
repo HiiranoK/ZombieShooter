@@ -1,24 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-public class PlayerInput : MonoBehaviour, IMatavel
+public class PlayerInput : MonoBehaviour, IMatavel, ICuravel
 {
-    Vector3 vetor;
+    public Vector3 vetor;
     public LayerMask MascaraChao;
     public HUD ScriptHUD;
     public AudioClip SomDeDano;
     public int PontosTotais;
     public GameObject textoVitoria;
-    private MovimentacaoMouse movimentaPlayer;
+    private MovimentacaoPlayer movimentaPlayer;
     private AnimacaoPersonagens animacaoPlayer;
     public Status StatusPlayer;
 
-    // Start is called before the first frame update
     void Start()
     {
-        movimentaPlayer = GetComponent<MovimentacaoMouse>();
-        animacaoPlayer = GetComponent <AnimacaoPersonagens>();
         StatusPlayer = GetComponent<Status>();
+        movimentaPlayer = GetComponent<MovimentacaoPlayer>();
+        animacaoPlayer = GetComponent <AnimacaoPersonagens>();
     }
 
     // Update is called once per frame
@@ -27,14 +26,11 @@ public class PlayerInput : MonoBehaviour, IMatavel
         float eixoX = Input.GetAxis("Horizontal");
         float eixoZ = Input.GetAxis("Vertical");
         vetor = new Vector3(eixoX, 0, eixoZ);
-                 
-     
     }
     void FixedUpdate()
     {
         animacaoPlayer.Mover(vetor.magnitude);
         movimentaPlayer.movimentar(vetor,StatusPlayer.velocidade);
-
         movimentaPlayer.Rotacao(MascaraChao);
     }
    
@@ -56,6 +52,16 @@ public class PlayerInput : MonoBehaviour, IMatavel
     public void Morrer()
     {
         ScriptHUD.GameOver();
+    }
+
+    public void CurarVida(int QuantidadeDeCura)
+    {
+        StatusPlayer.vida += QuantidadeDeCura;
+        if(StatusPlayer.vida > StatusPlayer.VidaInicial)
+        {
+            StatusPlayer.vida = StatusPlayer.VidaInicial;
+        }
+        ScriptHUD.AtualizarSliderVida();
     }
 
 }

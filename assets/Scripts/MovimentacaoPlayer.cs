@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MovimentacaoMouse : Movimentacao
+public class MovimentacaoPlayer : Movimentacao
 {
     public void Rotacao(LayerMask MascaraChao)
     {
