@@ -6,27 +6,32 @@ using UnityEngine;
     {
         public float Velocidade = 20;
         private Rigidbody rbBala;
-        public PlayerInput Player;
         public int Dano = 1;
 
     private void Start()
     {
         rbBala = GetComponent<Rigidbody>();
-        Player = GetComponent<PlayerInput>();
+
     }
 
     // Start is called before the first frame update
     void FixedUpdate()
         {
-            rbBala.MovePosition(rbBala.position + transform.forward * Velocidade * Time.deltaTime);
+            rbBala.MovePosition(rbBala.position + (transform.forward * Velocidade) * Time.deltaTime);
         }
 
         void OnTriggerEnter(Collider objetoDeColisao)
         {
-            Destroy(gameObject);
-            if (objetoDeColisao.tag == "Inimigo") {
+        Quaternion rotacaoOposta = Quaternion.LookRotation(transform.forward);
+            if (objetoDeColisao.tag == "Inimigo" && objetoDeColisao.GetComponent<ZumbiControl>().statusZumbi.vida >0) { 
                 objetoDeColisao.GetComponent<ZumbiControl>().TomarDano(Dano);
-            }     
+                objetoDeColisao.GetComponent<ZumbiControl>().Sangrar(transform.position, rotacaoOposta);
+            }
+            else if(objetoDeColisao.tag == "ChefeDeFase" && objetoDeColisao.GetComponent<ControlaChefe>().StatusChefe.vida >0){
+                objetoDeColisao.GetComponent<ControlaChefe>().TomarDano(Dano);
+                objetoDeColisao.GetComponent<ControlaChefe>().Sangrar(transform.position, rotacaoOposta);
+        }
+        Destroy(gameObject);
         }
     }
 

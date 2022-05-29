@@ -20,8 +20,13 @@ public class Movimentacao : MonoBehaviour
         Quaternion novaRotacao = Quaternion.LookRotation(direcao);
         meuRigidbody.MoveRotation(novaRotacao);
     }
-    public void Correr(float velocidadeCorrendo)
-    {
-        velocidadeCorrendo *= 3;
-    }
+    //public void Morrer()
+    //{
+    //    meuRigidbody.constraints = RigidbodyConstraints.None;
+    //    meuRigidbody.velocity = Vector3.zero;
+    //    if (Time.deltaTime > tempoMorrer)
+    //    {
+    //        GetComponent<Collider>().enabled = false;
+    //    }
+    //}
 }

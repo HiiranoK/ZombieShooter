@@ -19,7 +19,12 @@ public class ControlaMenu : MonoBehaviour
     public void Jogar()
     {
         PlayerPrefs.SetInt("SkinDePreferencia",numeroSkin);
-        SceneManager.LoadScene("tela");
+        StartCoroutine(MudarCena("tela"));
+    }
+    IEnumerator MudarCena (string name)
+    {
+        yield return new WaitForSeconds(0.5f);
+        SceneManager.LoadScene(name);
     }
     public void TrocarSkin()
     {
@@ -32,11 +37,16 @@ public class ControlaMenu : MonoBehaviour
         }
         player.GetChild(numeroSkin).gameObject.SetActive(true);
     }
-    public void Sair()
+    public void SairDoJogo()
     {
+        StartCoroutine(Sair());
+    }
+    IEnumerator Sair()
+    {
+        yield return new WaitForSeconds(0.5f);
         Application.Quit();
-        #if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
-        #endif
+    #if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+    #endif
     }
 }

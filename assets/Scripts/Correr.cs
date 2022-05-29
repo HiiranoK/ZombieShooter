@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Correr : MonoBehaviour
 {
-    private float energia = 3;
+    public float energia = 3;
     public float contadorTempo ;
     GameObject Player;
     public float VelocidadeCorrendo = 3f;
@@ -20,6 +20,7 @@ public class Correr : MonoBehaviour
         PlayerCorrendo();
         Contador();
         Descansar();
+
     }
     void PlayerCorrendo()
     {
@@ -56,7 +57,7 @@ public class Correr : MonoBehaviour
         if(contadorTempo > 0 && Player.GetComponent<PlayerInput>().vetor.magnitude <= 0.1)
         {
             contadorTempo -= (Time.deltaTime / 2);
-            if(contadorTempo <= 1)
+            if(contadorTempo <= energia)
             {
                 cansado = false;
             }
