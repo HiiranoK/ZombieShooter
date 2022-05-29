@@ -18,4 +18,9 @@ public class AnimacaoPersonagens : MonoBehaviour
     {
         meuAnimacoes.SetFloat("Correndo", valorDeMovimento);
     }
+    public void Morrer()
+    {
+        meuAnimacoes.SetTrigger("Morrer");
+        this.enabled = false;
+    }
 }

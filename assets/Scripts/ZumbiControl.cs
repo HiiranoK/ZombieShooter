@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 
 public class ZumbiControl : MonoBehaviour, IMatavel
@@ -9,27 +10,40 @@ public class ZumbiControl : MonoBehaviour, IMatavel
     private GameObject Player;
     private Movimentacao movimentoZumbi;
     private AnimacaoPersonagens animaZumbi;
-    private Status statusZumbi;
+    [HideInInspector]
+    public Status statusZumbi;
     public AudioClip SomDeMorte;
     private int Pontuacao = 1;
     private float moscar = 20;
     private Vector3 posicaoAleatoria;
     private Vector3 direcao;
     private float contadorVagal;
-    private float tempoEntreVagais = 5;
+    private int tempoEntreVagais = 4;
     public float porcentagemGerarKitMedico = 0.15f;
     public GameObject KitMedicoPrefab;
+    private HUD ScriptControlaHUD;
+    [HideInInspector]
+    public GeradorZumbi meuGerador;
+    public int tempoParaSumir = 2;
+    public GameObject particulaSangue;
+    public Slider SliderVidaZumbi;
+    public Image imagemSliderZumbi;
+    public Color CorDaVidaMaxima, CorDaVidaMinima;
 
     // Start is called before the first frame update
     void Start()
     {
+        statusZumbi = GetComponent<Status>();
+        VidaRandomica();
+        statusZumbi.vida = statusZumbi.VidaInicial;
         Player = GameObject.FindWithTag(Tags.player);
         movimentoZumbi = GetComponent<Movimentacao>();
         animaZumbi = GetComponent<AnimacaoPersonagens>();
-        statusZumbi = GetComponent<Status>();
+        ScriptControlaHUD = GameObject.FindObjectOfType(typeof(HUD)) as HUD; // Forma de chamar um scrypt de HUD de maneira private;
         RandomSkin();
-        VidaRandomica();
         Pontuacao = statusZumbi.vida;
+        SliderVidaZumbi.maxValue = statusZumbi.VidaInicial;
+        AtualizarInterface();
     }
     void OnDrawGizmos()
     {
@@ -68,30 +82,42 @@ public class ZumbiControl : MonoBehaviour, IMatavel
     }
     void RandomSkin()
     {
-        int geraTipoZumbi = Random.Range(1, 28);
+        int geraTipoZumbi = Random.Range(1, transform.childCount -1);
         transform.GetChild(geraTipoZumbi).gameObject.SetActive(true);
     }
 
     public void TomarDano(int dano)
     {
         statusZumbi.vida -= dano;
+        AtualizarInterface();
         if(statusZumbi.vida <= 0)
         {
             Morrer();
         }
     }
+
+    public void Sangrar(Vector3 posicao, Quaternion rotacao) 
+    {
+        Instantiate(particulaSangue, posicao, rotacao);
+    }
+
     public int VidaRandomica()
     {
-        statusZumbi.vida = Random.Range(1, 6);
-        return statusZumbi.vida;
+        statusZumbi.VidaInicial = Random.Range(1, 5);
+        return statusZumbi.VidaInicial;
     }
 
     public void Morrer()
     {
-        Destroy(gameObject);
+        Destroy(gameObject, tempoParaSumir);
+        this.enabled = false;
+        GetComponent<Collider>().enabled = false;
+        animaZumbi.Morrer(); 
+        ScriptControlaHUD.AtualizarQuantidadeDeZumbisMortos();
         ControlaAudio.instancia.PlayOneShot(SomDeMorte);
         Player.GetComponent<PlayerInput>().SomarPontos(Pontuacao);
         VerificarGeracaoKitMedico(porcentagemGerarKitMedico);
+        meuGerador.DiminuirQuantidadeDeZumbisVivos();
     }
     public void Vagar()
     {
@@ -99,7 +125,7 @@ public class ZumbiControl : MonoBehaviour, IMatavel
         if(contadorVagal <= 0)
         {
             posicaoAleatoria = AleatorizarPosicao();
-            contadorVagal = tempoEntreVagais;
+            contadorVagal = tempoEntreVagais + Random.Range(-2f,2f);
         }
 
         bool ficouPerto = Vector3.Distance(transform.position, posicaoAleatoria) <= 0.5;
@@ -122,5 +148,16 @@ public class ZumbiControl : MonoBehaviour, IMatavel
         {
             Instantiate(KitMedicoPrefab, transform.position,Quaternion.identity);
         }
+    }
+    void AtualizarInterface()
+    {
+        if(statusZumbi.vida < statusZumbi.VidaInicial)
+        {
+            SliderVidaZumbi.gameObject.SetActive(true);
+        }
+        SliderVidaZumbi.value = statusZumbi.vida;
+        float porcentagemDaVida = (float)statusZumbi.vida / statusZumbi.VidaInicial;
+        Color corDaVida = Color.Lerp(CorDaVidaMinima, CorDaVidaMaxima, porcentagemDaVida);
+        imagemSliderZumbi.color = corDaVida;
     }
 }

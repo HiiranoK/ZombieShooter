@@ -5,19 +5,24 @@ public class PlayerInput : MonoBehaviour, IMatavel, ICuravel
 {
     public Vector3 vetor;
     public LayerMask MascaraChao;
-    public HUD ScriptHUD;
+    public HUD ScriptControlaHUD;
     public AudioClip SomDeDano;
     public int PontosTotais;
     public GameObject textoVitoria;
     private MovimentacaoPlayer movimentaPlayer;
     private AnimacaoPersonagens animacaoPlayer;
     public Status StatusPlayer;
+    public GameObject player;
+    private int skinDePreferencia;
 
     void Start()
     {
+        skinDePreferencia = PlayerPrefs.GetInt("SkinDePreferencia");
         StatusPlayer = GetComponent<Status>();
         movimentaPlayer = GetComponent<MovimentacaoPlayer>();
         animacaoPlayer = GetComponent <AnimacaoPersonagens>();
+        player = GameObject.FindWithTag(Tags.player);
+        TrocandoSkinDoPlayer();
     }
 
     // Update is called once per frame
@@ -26,6 +31,7 @@ public class PlayerInput : MonoBehaviour, IMatavel, ICuravel
         float eixoX = Input.GetAxis("Horizontal");
         float eixoZ = Input.GetAxis("Vertical");
         vetor = new Vector3(eixoX, 0, eixoZ);
+        ScriptControlaHUD.AtualizarSliderEnergia();
     }
     void FixedUpdate()
     {
@@ -37,7 +43,7 @@ public class PlayerInput : MonoBehaviour, IMatavel, ICuravel
     public void TomarDano(int dano)
     {
         StatusPlayer.vida -= dano;
-        ScriptHUD.AtualizarSliderVida();
+        ScriptControlaHUD.AtualizarSliderVida();
         ControlaAudio.instancia.PlayOneShot(SomDeDano);
         if (StatusPlayer.vida <= 0)
         {
@@ -51,7 +57,7 @@ public class PlayerInput : MonoBehaviour, IMatavel, ICuravel
     }
     public void Morrer()
     {
-        ScriptHUD.GameOver();
+        ScriptControlaHUD.GameOver();
     }
 
     public void CurarVida(int QuantidadeDeCura)
@@ -61,7 +67,10 @@ public class PlayerInput : MonoBehaviour, IMatavel, ICuravel
         {
             StatusPlayer.vida = StatusPlayer.VidaInicial;
         }
-        ScriptHUD.AtualizarSliderVida();
+        ScriptControlaHUD.AtualizarSliderVida();
     }
-
+    public void TrocandoSkinDoPlayer()
+    {
+        player.transform.GetChild(skinDePreferencia).gameObject.SetActive(true);
+    }
 }
